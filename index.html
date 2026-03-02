@@ -150,6 +150,8 @@ footer{background:#0A0908;border-top:1px solid rgba(201,169,110,.12);color:#F5F0
 .admin-product-remove:hover{color:#e74c3c}
 .admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;pointer-events:none;transition:opacity .4s}
 .admin-overlay.active{opacity:1;pointer-events:all}
+.save-status{font-size:.7rem;color:#25D366;margin-top:.5rem;opacity:0;transition:opacity .3s}
+.save-status.show{opacity:1}
 
 @media(max-width:900px){
 section{padding:4rem 1.5rem}nav{padding:1rem 1.5rem}nav.scrolled{padding:.8rem 1.5rem}.nav-links{display:none}.hamburger{display:flex}.collection-grid,.about-grid{grid-template-columns:1fr;gap:2.5rem}.products-grid{grid-template-columns:repeat(2,1fr);gap:1.5rem}.artistic-gallery{grid-template-columns:repeat(2,1fr)}.buy-steps{grid-template-columns:1fr;gap:2rem}.buy-info{flex-direction:column;gap:1.5rem}.footer-content{grid-template-columns:1fr;gap:2rem}.footer-bottom{flex-direction:column;gap:1rem;text-align:center}.admin-panel{width:100%}}
@@ -184,30 +186,187 @@ section{padding:4rem 1.5rem}nav{padding:1rem 1.5rem}nav.scrolled{padding:.8rem 1
 <button class="admin-toggle" id="adminToggle" onclick="toggleAdmin()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>
 
 <div class="admin-overlay" id="adminOverlay" onclick="toggleAdmin()"></div>
-<div class="admin-panel" id="adminPanel"><button class="admin-close" onclick="toggleAdmin()">&times;</button><h3>Gerir Conteúdo</h3><p class="admin-subtitle">Adicione imagens e actualize os produtos.</p><div class="admin-section"><h4>WhatsApp Business</h4><div class="admin-input-group"><label>Número (ex: 244912345678)</label><input type="text" id="adminWhatsapp" placeholder="244912345678" oninput="updateWhatsApp()"></div></div><div class="admin-section"><h4>Colecção em Destaque</h4><div class="admin-input-group"><label>Imagem (URL)</label><input type="text" id="adminFeaturedImg" placeholder="Cole o link da imagem"></div><div class="admin-input-group"><label>Título</label><input type="text" id="adminFeaturedTitle" value="Jogo de Jantar — Edição Limitada"></div><div class="admin-input-group"><label>Descrição</label><textarea id="adminFeaturedDesc">Um conjunto pensado para quem valoriza elegância, intenção e beleza no dia a dia. Peças selecionadas em quantidade limitada.</textarea></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;"><div class="admin-input-group"><label>Nº Peças</label><input type="text" id="adminPieces" placeholder="24"></div><div class="admin-input-group"><label>Material</label><input type="text" id="adminMaterial" placeholder="Porcelana"></div><div class="admin-input-group"><label>Acabamento</label><input type="text" id="adminFinish" placeholder="Dourado"></div></div><button class="admin-btn" onclick="updateFeatured()">Actualizar</button></div><div class="admin-section"><h4>Adicionar Produto</h4><div class="admin-input-group"><label>Imagem (URL)</label><input type="text" id="newProductImg" placeholder="Cole o link"></div><div class="admin-input-group"><label>Nome</label><input type="text" id="newProductName" placeholder="Prato Doré"></div><div class="admin-input-group"><label>Descrição</label><input type="text" id="newProductDesc" placeholder="Porcelana dourada"></div><div class="admin-input-group"><label>Preço</label><input type="text" id="newProductPrice" placeholder="Sob consulta"></div><button class="admin-btn" onclick="addProduct()">Adicionar</button><div style="margin-top:1.5rem;"><label style="font-size:.7rem;color:#706B63;letter-spacing:.1em;text-transform:uppercase;">Produtos</label><div id="adminProductList" style="margin-top:.8rem;"></div></div></div><div class="admin-section"><h4>Galeria Artística</h4><div class="admin-input-group"><label>Imagem (URL)</label><input type="text" id="newGalleryImg" placeholder="Cole o link"></div><div class="admin-input-group"><label>Legenda</label><input type="text" id="newGalleryCaption" placeholder="Performance ao vivo"></div><button class="admin-btn" onclick="addGalleryItem()">Adicionar</button></div><div class="admin-section"><h4>Entregas</h4><div class="admin-input-group"><label>Zona</label><input type="text" id="adminDeliveryArea" value="Luanda"></div><div class="admin-input-group"><label>Prazo</label><input type="text" id="adminDeliveryTime" value="3-5 dias úteis"></div><button class="admin-btn" onclick="updateDelivery()">Actualizar</button></div><div class="admin-section"><h4>Foto da Liriany</h4><div class="admin-input-group"><label>Imagem (URL)</label><input type="text" id="adminAboutImg" placeholder="Cole o link"></div><button class="admin-btn" onclick="updateAboutPortrait()">Actualizar</button></div></div>
+<div class="admin-panel" id="adminPanel"><button class="admin-close" onclick="toggleAdmin()">&times;</button><h3>Gerir Conteúdo</h3><p class="admin-subtitle">Adicione imagens e actualize os produtos. Tudo é guardado automaticamente.</p><div class="admin-section"><h4>WhatsApp Business</h4><div class="admin-input-group"><label>Número (ex: 244912345678)</label><input type="text" id="adminWhatsapp" placeholder="244912345678"></div><button class="admin-btn" onclick="saveAll()">Guardar</button><div class="save-status" id="saveStatusWa">Guardado ✓</div></div><div class="admin-section"><h4>Colecção em Destaque</h4><div class="admin-input-group"><label>Imagem (URL)</label><input type="text" id="adminFeaturedImg" placeholder="Cole o link da imagem"></div><div class="admin-input-group"><label>Título</label><input type="text" id="adminFeaturedTitle" value="Jogo de Jantar — Edição Limitada"></div><div class="admin-input-group"><label>Descrição</label><textarea id="adminFeaturedDesc">Um conjunto pensado para quem valoriza elegância, intenção e beleza no dia a dia. Peças selecionadas em quantidade limitada.</textarea></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;"><div class="admin-input-group"><label>Nº Peças</label><input type="text" id="adminPieces" placeholder="24"></div><div class="admin-input-group"><label>Material</label><input type="text" id="adminMaterial" placeholder="Porcelana"></div><div class="admin-input-group"><label>Acabamento</label><input type="text" id="adminFinish" placeholder="Dourado"></div></div><button class="admin-btn" onclick="saveAll()">Guardar</button><div class="save-status" id="saveStatusFeat">Guardado ✓</div></div><div class="admin-section"><h4>Adicionar Produto</h4><div class="admin-input-group"><label>Imagem (URL)</label><input type="text" id="newProductImg" placeholder="Cole o link"></div><div class="admin-input-group"><label>Nome</label><input type="text" id="newProductName" placeholder="Prato Doré"></div><div class="admin-input-group"><label>Descrição</label><input type="text" id="newProductDesc" placeholder="Porcelana dourada"></div><div class="admin-input-group"><label>Preço</label><input type="text" id="newProductPrice" placeholder="Sob consulta"></div><button class="admin-btn" onclick="addProduct()">Adicionar Produto</button><div style="margin-top:1.5rem;"><label style="font-size:.7rem;color:#706B63;letter-spacing:.1em;text-transform:uppercase;">Produtos</label><div id="adminProductList" style="margin-top:.8rem;"></div></div></div><div class="admin-section"><h4>Galeria Artística</h4><div class="admin-input-group"><label>Imagem (URL)</label><input type="text" id="newGalleryImg" placeholder="Cole o link"></div><div class="admin-input-group"><label>Legenda</label><input type="text" id="newGalleryCaption" placeholder="Performance ao vivo"></div><button class="admin-btn" onclick="addGalleryItem()">Adicionar</button></div><div class="admin-section"><h4>Entregas</h4><div class="admin-input-group"><label>Zona</label><input type="text" id="adminDeliveryArea" value="Luanda"></div><div class="admin-input-group"><label>Prazo</label><input type="text" id="adminDeliveryTime" value="3-5 dias úteis"></div><button class="admin-btn" onclick="saveAll()">Guardar</button></div><div class="admin-section"><h4>Foto da Liriany</h4><div class="admin-input-group"><label>Imagem (URL)</label><input type="text" id="adminAboutImg" placeholder="Cole o link"></div><button class="admin-btn" onclick="saveAll()">Guardar</button></div></div>
 
 <script>
+// ===== SUPABASE CONFIG =====
+var SB_URL='https://rqtsuwiuhwlrezulpxmi.supabase.co';
+var SB_KEY='sb_publishable_3y5x4a9h38s7Erh3sJYhJA_24__OSt7';
 var isAdmin=new URLSearchParams(window.location.search).get('admin')==='true';
-if(isAdmin){document.getElementById('adminToggle').style.display='flex';}
+if(isAdmin)document.getElementById('adminToggle').style.display='flex';
 
+// ===== SUPABASE HELPERS =====
+function sbGet(key){
+  return fetch(SB_URL+'/rest/v1/site_content?key=eq.'+key+'&select=value',{
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+  }).then(function(r){return r.json();}).then(function(d){return d.length?JSON.parse(d[0].value):null;});
+}
+function sbSet(key,value){
+  return fetch(SB_URL+'/rest/v1/site_content',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({key:key,value:JSON.stringify(value)})
+  });
+}
+
+// ===== DATA =====
 var D={whatsapp:'',featured:{image:'',title:'Jogo de Jantar — Edição Limitada',description:'Um conjunto pensado para quem valoriza elegância, intenção e beleza no dia a dia. Peças selecionadas em quantidade limitada.',pieces:'',material:'',finish:''},products:[],gallery:[],delivery:{area:'Luanda',time:'A confirmar'},aboutImage:''};
-try{var s=window.name?JSON.parse(window.name):null;if(s&&s._hw)D=s._hw;}catch(e){}
-function save(){try{window.name=JSON.stringify({_hw:D});}catch(e){}}
+
 function toggleAdmin(){if(!isAdmin)return;document.getElementById('adminPanel').classList.toggle('open');document.getElementById('adminOverlay').classList.toggle('active');}
 function toggleMobileMenu(){document.getElementById('mobileMenu').classList.toggle('active');}
-function updateWhatsApp(){var n=document.getElementById('adminWhatsapp').value.replace(/\D/g,'');D.whatsapp=n;var m=encodeURIComponent('Olá 🤍\nVi o jogo de jantar da Housewife by Liriany e gostaria de receber os detalhes ✨');var u=n?'https://wa.me/'+n+'?text='+m:'#';document.querySelectorAll('.whatsapp-btn,#mainWhatsappBtn').forEach(function(b){b.href=u;});var fw=document.getElementById('footerWhatsapp');if(fw)fw.href=n?'https://wa.me/'+n:'#';document.querySelectorAll('.product-inquire').forEach(function(b){var pm=encodeURIComponent('Olá 🤍\nTenho interesse: '+(b.dataset.product||'')+'\nHousewife by Liriany ✨');b.href=n?'https://wa.me/'+n+'?text='+pm:'#';});save();}
-function updateFeatured(){var img=document.getElementById('adminFeaturedImg').value,t=document.getElementById('adminFeaturedTitle').value,d=document.getElementById('adminFeaturedDesc').value,p=document.getElementById('adminPieces').value,mt=document.getElementById('adminMaterial').value,f=document.getElementById('adminFinish').value;D.featured={image:img,title:t,description:d,pieces:p,material:mt,finish:f};if(img)document.getElementById('featuredImage').innerHTML='<img src="'+img+'" alt="" style="width:100%;height:100%;object-fit:cover;">';document.getElementById('featuredTitle').innerHTML=t.replace('—','<br>');document.getElementById('featuredDesc').textContent=d;if(p)document.getElementById('detailPieces').textContent=p+' peças';if(mt)document.getElementById('detailMaterial').textContent=mt;if(f)document.getElementById('detailFinish').textContent=f;save();}
-function addProduct(){var img=document.getElementById('newProductImg').value,nm=document.getElementById('newProductName').value,ds=document.getElementById('newProductDesc').value,pr=document.getElementById('newProductPrice').value;if(!nm)return alert('Insira o nome.');D.products.push({img:img,name:nm,desc:ds,price:pr||'Sob consulta'});renderProducts();renderAP();document.getElementById('newProductImg').value='';document.getElementById('newProductName').value='';document.getElementById('newProductDesc').value='';document.getElementById('newProductPrice').value='';save();}
-function removeProduct(i){D.products.splice(i,1);renderProducts();renderAP();save();}
-function renderProducts(){var g=document.getElementById('productsGrid');if(!D.products.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:4rem 2rem;"><div class="placeholder-icon" style="margin:0 auto 1.5rem;"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" style="width:24px;height:24px;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div><p style="font-family:Cormorant Garamond,serif;font-size:1.2rem;color:#A89F94;margin-bottom:.5rem;">Produtos em breve</p></div>';return;}var n=D.whatsapp;g.innerHTML=D.products.map(function(p){var pm=encodeURIComponent('Olá 🤍\nTenho interesse: '+p.name+'\nHousewife by Liriany ✨');var wl=n?'https://wa.me/'+n+'?text='+pm:'#';return '<div class="product-card reveal visible"><div class="product-image">'+(p.img?'<img src="'+p.img+'" alt="'+p.name+'">':'<div class="placeholder-content"><div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></div><p class="placeholder-text">Imagem</p></div>')+'</div><div class="product-name">'+p.name+'</div><div class="product-desc">'+p.desc+'</div><div class="product-price">'+p.price+'</div><a href="'+wl+'" target="_blank" class="product-inquire" data-product="'+p.name+'">Saber mais →</a></div>';}).join('');}
-function renderAP(){var l=document.getElementById('adminProductList');if(!D.products.length){l.innerHTML='<p style="font-size:.8rem;color:#706B63;">Nenhum.</p>';return;}l.innerHTML=D.products.map(function(p,i){return '<div class="admin-product-item"><div class="admin-product-thumb">'+(p.img?'<img src="'+p.img+'">':'')+'</div><div class="admin-product-info"><strong>'+p.name+'</strong><span>'+p.price+'</span></div><button class="admin-product-remove" onclick="removeProduct('+i+')">&times;</button></div>';}).join('');}
-function addGalleryItem(){var img=document.getElementById('newGalleryImg').value,c=document.getElementById('newGalleryCaption').value;if(!img)return alert('Insira o link.');D.gallery.push({img:img,caption:c||''});renderGallery();document.getElementById('newGalleryImg').value='';document.getElementById('newGalleryCaption').value='';save();}
-function renderGallery(){var g=document.getElementById('artisticGallery');if(!D.gallery.length){g.innerHTML=Array.from({length:5},function(_,i){return '<div class="gallery-item"><div style="display:flex;flex-direction:column;align-items:center;gap:.5rem;"><div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" style="width:24px;height:24px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></div><p class="placeholder-text">'+(i===0?'Destaque':'Galeria')+'</p></div></div>';}).join('');return;}g.innerHTML=D.gallery.map(function(x){return '<div class="gallery-item"><img src="'+x.img+'" alt="'+x.caption+'">'+(x.caption?'<div class="gallery-overlay"><span class="gallery-caption">'+x.caption+'</span></div>':'')+'</div>';}).join('');}
-function updateDelivery(){D.delivery.area=document.getElementById('adminDeliveryArea').value;D.delivery.time=document.getElementById('adminDeliveryTime').value;document.getElementById('deliveryArea').textContent=D.delivery.area;document.getElementById('deliveryTime').textContent=D.delivery.time;save();}
-function updateAboutPortrait(){var img=document.getElementById('adminAboutImg').value;if(img){D.aboutImage=img;document.getElementById('aboutPortrait').innerHTML='<img src="'+img+'" alt="Liriany" style="width:100%;height:100%;object-fit:cover;">';save();}}
+
+function getWhatsAppUrl(msg){
+  var m=encodeURIComponent(msg||'Olá 🤍\nVi o jogo de jantar da Housewife by Liriany e gostaria de receber os detalhes ✨');
+  return D.whatsapp?'https://wa.me/'+D.whatsapp+'?text='+m:'#';
+}
+
+function applyData(){
+  // WhatsApp
+  var waUrl=getWhatsAppUrl();
+  document.querySelectorAll('.whatsapp-btn,#mainWhatsappBtn').forEach(function(b){b.href=waUrl;});
+  var fw=document.getElementById('footerWhatsapp');if(fw)fw.href=D.whatsapp?'https://wa.me/'+D.whatsapp:'#';
+
+  // Featured
+  if(D.featured.image)document.getElementById('featuredImage').innerHTML='<img src="'+D.featured.image+'" alt="" style="width:100%;height:100%;object-fit:cover;">';
+  if(D.featured.title)document.getElementById('featuredTitle').innerHTML=D.featured.title.replace('—','<br>');
+  if(D.featured.description)document.getElementById('featuredDesc').textContent=D.featured.description;
+  if(D.featured.pieces)document.getElementById('detailPieces').textContent=D.featured.pieces+' peças';
+  if(D.featured.material)document.getElementById('detailMaterial').textContent=D.featured.material;
+  if(D.featured.finish)document.getElementById('detailFinish').textContent=D.featured.finish;
+
+  // Delivery
+  if(D.delivery.area)document.getElementById('deliveryArea').textContent=D.delivery.area;
+  if(D.delivery.time)document.getElementById('deliveryTime').textContent=D.delivery.time;
+
+  // About
+  if(D.aboutImage)document.getElementById('aboutPortrait').innerHTML='<img src="'+D.aboutImage+'" alt="Liriany" style="width:100%;height:100%;object-fit:cover;">';
+
+  // Products
+  renderProducts();
+
+  // Gallery
+  renderGallery();
+
+  // Fill admin fields if admin
+  if(isAdmin){
+    document.getElementById('adminWhatsapp').value=D.whatsapp||'';
+    document.getElementById('adminFeaturedImg').value=D.featured.image||'';
+    document.getElementById('adminFeaturedTitle').value=D.featured.title||'';
+    document.getElementById('adminFeaturedDesc').value=D.featured.description||'';
+    document.getElementById('adminPieces').value=D.featured.pieces||'';
+    document.getElementById('adminMaterial').value=D.featured.material||'';
+    document.getElementById('adminFinish').value=D.featured.finish||'';
+    document.getElementById('adminDeliveryArea').value=D.delivery.area||'';
+    document.getElementById('adminDeliveryTime').value=D.delivery.time||'';
+    document.getElementById('adminAboutImg').value=D.aboutImage||'';
+    renderAP();
+  }
+}
+
+function renderProducts(){
+  var g=document.getElementById('productsGrid');
+  if(!D.products.length){
+    g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:4rem 2rem;"><div class="placeholder-icon" style="margin:0 auto 1.5rem;"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" style="width:24px;height:24px;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div><p style="font-family:Cormorant Garamond,serif;font-size:1.2rem;color:#A89F94;margin-bottom:.5rem;">Produtos em breve</p></div>';
+    return;
+  }
+  g.innerHTML=D.products.map(function(p){
+    var wl=getWhatsAppUrl('Olá 🤍\nTenho interesse: '+p.name+'\nHousewife by Liriany ✨');
+    return '<div class="product-card reveal visible"><div class="product-image">'+(p.img?'<img src="'+p.img+'" alt="'+p.name+'">':'<div class="placeholder-content"><div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></div><p class="placeholder-text">Imagem</p></div>')+'</div><div class="product-name">'+p.name+'</div><div class="product-desc">'+p.desc+'</div><div class="product-price">'+p.price+'</div><a href="'+wl+'" target="_blank" class="product-inquire" data-product="'+p.name+'">Saber mais →</a></div>';
+  }).join('');
+}
+
+function renderAP(){
+  var l=document.getElementById('adminProductList');
+  if(!D.products.length){l.innerHTML='<p style="font-size:.8rem;color:#706B63;">Nenhum.</p>';return;}
+  l.innerHTML=D.products.map(function(p,i){
+    return '<div class="admin-product-item"><div class="admin-product-thumb">'+(p.img?'<img src="'+p.img+'">':'')+'</div><div class="admin-product-info"><strong>'+p.name+'</strong><span>'+p.price+'</span></div><button class="admin-product-remove" onclick="removeProduct('+i+')">&times;</button></div>';
+  }).join('');
+}
+
+function renderGallery(){
+  var g=document.getElementById('artisticGallery');
+  if(!D.gallery.length){
+    g.innerHTML=Array.from({length:5},function(_,i){
+      return '<div class="gallery-item"><div style="display:flex;flex-direction:column;align-items:center;gap:.5rem;"><div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" style="width:24px;height:24px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></div><p class="placeholder-text">'+(i===0?'Destaque':'Galeria')+'</p></div></div>';
+    }).join('');
+    return;
+  }
+  g.innerHTML=D.gallery.map(function(x){
+    return '<div class="gallery-item"><img src="'+x.img+'" alt="'+x.caption+'">'+(x.caption?'<div class="gallery-overlay"><span class="gallery-caption">'+x.caption+'</span></div>':'')+'</div>';
+  }).join('');
+}
+
+// ===== SAVE ALL TO SUPABASE =====
+function saveAll(){
+  D.whatsapp=document.getElementById('adminWhatsapp').value.replace(/\D/g,'');
+  D.featured={
+    image:document.getElementById('adminFeaturedImg').value,
+    title:document.getElementById('adminFeaturedTitle').value,
+    description:document.getElementById('adminFeaturedDesc').value,
+    pieces:document.getElementById('adminPieces').value,
+    material:document.getElementById('adminMaterial').value,
+    finish:document.getElementById('adminFinish').value
+  };
+  D.delivery={
+    area:document.getElementById('adminDeliveryArea').value,
+    time:document.getElementById('adminDeliveryTime').value
+  };
+  D.aboutImage=document.getElementById('adminAboutImg').value;
+
+  sbSet('sitedata',D).then(function(){
+    applyData();
+    // Flash all save statuses
+    document.querySelectorAll('.save-status').forEach(function(el){
+      el.classList.add('show');
+      setTimeout(function(){el.classList.remove('show');},2000);
+    });
+  });
+}
+
+function addProduct(){
+  var img=document.getElementById('newProductImg').value;
+  var nm=document.getElementById('newProductName').value;
+  var ds=document.getElementById('newProductDesc').value;
+  var pr=document.getElementById('newProductPrice').value;
+  if(!nm)return alert('Insira o nome.');
+  D.products.push({img:img,name:nm,desc:ds,price:pr||'Sob consulta'});
+  document.getElementById('newProductImg').value='';
+  document.getElementById('newProductName').value='';
+  document.getElementById('newProductDesc').value='';
+  document.getElementById('newProductPrice').value='';
+  sbSet('sitedata',D).then(function(){applyData();renderAP();});
+}
+
+function removeProduct(i){
+  D.products.splice(i,1);
+  sbSet('sitedata',D).then(function(){applyData();renderAP();});
+}
+
+function addGalleryItem(){
+  var img=document.getElementById('newGalleryImg').value;
+  var c=document.getElementById('newGalleryCaption').value;
+  if(!img)return alert('Insira o link.');
+  D.gallery.push({img:img,caption:c||''});
+  document.getElementById('newGalleryImg').value='';
+  document.getElementById('newGalleryCaption').value='';
+  sbSet('sitedata',D).then(function(){applyData();});
+}
+
+// ===== SCROLL & REVEAL =====
 window.addEventListener('scroll',function(){document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>80);});
-var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
-(function(){if(D.whatsapp){document.getElementById('adminWhatsapp').value=D.whatsapp;updateWhatsApp();}if(D.featured.image){document.getElementById('adminFeaturedImg').value=D.featured.image;document.getElementById('adminFeaturedTitle').value=D.featured.title;document.getElementById('adminFeaturedDesc').value=D.featured.description;document.getElementById('adminPieces').value=D.featured.pieces;document.getElementById('adminMaterial').value=D.featured.material;document.getElementById('adminFinish').value=D.featured.finish;updateFeatured();}if(D.aboutImage){document.getElementById('adminAboutImg').value=D.aboutImage;updateAboutPortrait();}document.getElementById('adminDeliveryArea').value=D.delivery.area;document.getElementById('adminDeliveryTime').value=D.delivery.time;updateDelivery();renderProducts();renderAP();renderGallery();})();
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+
+// ===== LOAD DATA FROM SUPABASE =====
+sbGet('sitedata').then(function(data){
+  if(data){
+    D=data;
+    applyData();
+  }
+}).catch(function(err){
+  console.log('Could not load from Supabase:',err);
+  applyData();
+});
 </script>
 
 </body>
